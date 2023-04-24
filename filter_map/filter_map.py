@@ -16,8 +16,8 @@ class FilterMapExercise:
         """
         out_list = []
         for elem in input_array:
-            check_true, result = func(elem)
-            if check_true:
+            is_correct, result = func(elem)
+            if is_correct:
                 out_list.append(result)
 
         return out_list
