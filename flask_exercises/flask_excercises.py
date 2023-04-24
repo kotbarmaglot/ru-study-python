@@ -26,24 +26,21 @@ class FlaskExercise:
     def configure_routes(app: Flask) -> None:
         dict_user = {}
 
-
         @app.route("/user", methods=["POST"])
         def create_user():
             data = request.json
             if data.get('name'):
                 dict_user[data['name']] = {}
                 return {"data": f"User {data.get('name')} is created!"}, 201
-
-            return {"errors": {"name": "This field is required"}}, 422
-
+            else:
+                return {"errors": {"name": "This field is required"}}, 422
 
         @app.route("/user/<name>", methods=["GET"])
         def get_user(name):
             if name in dict_user:
                 return {"data": f"My name is {name}"}, 200
-
-            return "User not found", 404
-
+            else:
+                return "User not found", 404
 
         @app.route("/user/<name>", methods=["PATCH"])
         def update_user(name):
@@ -52,12 +49,13 @@ class FlaskExercise:
                 dict_user[new_name] = dict_user[name]
                 del dict_user[name]
                 return {"data": f"My name is {new_name}"}, 200
-
+            else:
+                return "User not found", 404
 
         @app.route("/user/<name>", methods=["DELETE"])
         def delete_user(name):
             if name in dict_user:
                 del dict_user[name]
                 return '', 204
-
-            return "User not found", 404
+            else:
+                return "User not found", 404
