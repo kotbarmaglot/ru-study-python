@@ -29,33 +29,35 @@ class FlaskExercise:
         @app.route("/user", methods=["POST"])
         def create_user():
             data = request.json
-            if data.get('name'):
-                dict_user[data['name']] = {}
-                return {"data": f"User {data.get('name')} is created!"}, 201
-            else:
+
+            if not data.get('name'):
                 return {"errors": {"name": "This field is required"}}, 422
+
+            dict_user[data['name']] = {}
+            return {"data": f"User {data.get('name')} is created!"}, 201
 
         @app.route("/user/<name>", methods=["GET"])
         def get_user(name):
-            if name in dict_user:
-                return {"data": f"My name is {name}"}, 200
-            else:
+            if name not in dict_user:
                 return "User not found", 404
+
+            return {"data": f"My name is {name}"}, 200
 
         @app.route("/user/<name>", methods=["PATCH"])
         def update_user(name):
             new_name = request.json.get('name')
-            if name in dict_user:
-                dict_user[new_name] = dict_user[name]
-                del dict_user[name]
-                return {"data": f"My name is {new_name}"}, 200
-            else:
+
+            if name not in dict_user:
                 return "User not found", 404
+
+            dict_user[new_name] = dict_user[name]
+            del dict_user[name]
+            return {"data": f"My name is {new_name}"}, 200
 
         @app.route("/user/<name>", methods=["DELETE"])
         def delete_user(name):
-            if name in dict_user:
-                del dict_user[name]
-                return '', 204
-            else:
+            if name not in dict_user:
                 return "User not found", 404
+
+            del dict_user[name]
+            return '', 204
